@@ -4,7 +4,10 @@
   "description": "Convert txt to xml",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsx src/index.ts input.txt",
+    "dev": "tsx watch src/index.ts input.txt",
+    "build": "tsc",
+    "run:built": "node dist/index.js input.txt"
   },
   "keywords": [],
   "author": "",
