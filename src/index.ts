@@ -39,7 +39,7 @@ if (!fs.existsSync(inputPath)) {
 const lines = fs.readFileSync(inputPath, "utf8").split("\n");
 //.map(line => line.trim()); // trim whitespaces?
 
-// Make people objects
+// Function for transforming line into person objects
 function createPeople(lines: string[]): Person[] {
   const persons: Person[] = [];
   let currentPerson: Person | null = null;
@@ -71,7 +71,7 @@ function createPeople(lines: string[]): Person[] {
 
       // T|mobile|telephone
       case "T": {
-        // Display error When person is missing
+        // Error When person is missing
         if (!currentPerson) {
           console.warn(`T-line without active person: "${line}"`);
           continue;
@@ -85,7 +85,7 @@ function createPeople(lines: string[]): Person[] {
 
       // A|street|city|postalnumber
       case "A": {
-        // Display error when person is missing
+        // Error when person is missing
         if (!currentPerson) {
           console.warn(`A-line without active person: "${line}"`);
           continue;
@@ -102,7 +102,7 @@ function createPeople(lines: string[]): Person[] {
 
       // F|name|year
       case "F": {
-        // Display error when person is missing
+        // Error when person is missing
         if (!currentPerson) {
           console.warn(`F-line without active person: "${line}"`);
           continue;
@@ -122,5 +122,61 @@ function createPeople(lines: string[]): Person[] {
   return persons;
 }
 
+// Function for building XML
+function buildXml(people: Person[]): string {
+  const root = create({ version: "1.0" }).ele("people");
+
+  for (const p of people) {
+    // New pperson node
+    const personNode = root.ele("person");
+    // Person name
+    personNode.ele("firstname").txt(p.firstname || "");
+    personNode.ele("lastname").txt(p.lastname || "");
+
+    // Person address
+    if (p.address) {
+      const a = personNode.ele("address");
+      if (p.address.street) a.ele("street").txt(p.address.street);
+      if (p.address.city) a.ele("city").txt(p.address.city);
+      if (p.address.postal) a.ele("postalnumber").txt(p.address.postal);
+    }
+
+    // Person phone
+    if (p.phone && (p.phone.mobile || p.phone.telephone)) {
+      const t = personNode.ele("phone");
+      if (p.phone.mobile) t.ele("mobile").txt(p.phone.mobile);
+      if (p.phone.telephone) t.ele("telephone").txt(p.phone.telephone);
+    }
+
+    for (const f of p.family) {
+      // New family node
+      const famNode = personNode.ele("family");
+      // Family name
+      famNode.ele("name").txt(f.name || "");
+      famNode.ele("born").txt(f.born || "");
+
+      // Family address
+      if (f.address) {
+        const a = famNode.ele("address");
+        if (f.address.street) a.ele("street").txt(f.address.street);
+        if (f.address.city) a.ele("city").txt(f.address.city);
+        if (f.address.postal) a.ele("postalnumber").txt(f.address.postal);
+      }
+
+      // Family phone
+      if (f.phone && (f.phone.mobile || f.phone.telephone)) {
+        const t = famNode.ele("phone");
+        if (f.phone.mobile) t.ele("mobile").txt(f.phone.mobile);
+        if (f.phone.telephone) t.ele("telephone").txt(f.phone.telephone);
+      }
+    }
+  }
+
+  return root.end({ prettyPrint: true }); // XML with line breaks and indentation
+}
+
+// Read data and create XML file
 const people = createPeople(lines);
-console.log(people);
+const xml = buildXml(people);
+fs.writeFileSync(outputPath, xml, "utf8");
+console.log(`XML created: ${outputPath}`);

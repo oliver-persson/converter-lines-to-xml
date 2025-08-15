@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<people>
+  <person>
+    <firstname>Carl Gustaf</firstname>
+    <lastname>Bernadotte</lastname>
+    <address>
+      <street>Drottningholms slott</street>
+      <city>Stockholm</city>
+      <postalnumber>10001</postalnumber>
+    </address>
+    <phone>
+      <mobile>0768-101801</mobile>
+      <telephone>08-101801</telephone>
+    </phone>
+    <family>
+      <name>Victoria</name>
+      <born>1977</born>
+      <address>
+        <street>Haga Slott</street>
+        <city>Stockholm</city>
+        <postalnumber>10002</postalnumber>
+      </address>
+    </family>
+    <family>
+      <name>Carl Philip</name>
+      <born>1979</born>
+      <phone>
+        <mobile>0768-101802</mobile>
+        <telephone>08-101802</telephone>
+      </phone>
+    </family>
+  </person>
+  <person>
+    <firstname>Barack</firstname>
+    <lastname>Obama</lastname>
+    <address>
+      <street>1600 Pennsylvania Avenue</street>
+      <city>Washington, D.C</city>
+    </address>
+  </person>
+</people>
